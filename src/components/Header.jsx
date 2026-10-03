@@ -1,6 +1,22 @@
 import { Bell, Menu, LogOut } from "lucide-react";
 
-function Header({ activePage, sidebarOpen, setSidebarOpen, onLogout }) {
+function Header({
+  activePage,
+  sidebarOpen,
+  setSidebarOpen,
+  onLogout,
+  currentUser,
+}) {
+  const getInitials = (name) => {
+    if (!name) return "?";
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .slice(0, 2)
+      .join("")
+      .toUpperCase();
+  };
+
   return (
     <header className="header">
       <div className="header-left">
@@ -27,8 +43,17 @@ function Header({ activePage, sidebarOpen, setSidebarOpen, onLogout }) {
         </button>
 
         <div className="profile">
-          <div className="profile-avatar">A</div>
-          <span>Admin</span>
+          <div className="profile-avatar">
+            {currentUser ? getInitials(currentUser.name) : "?"}
+          </div>
+          <div className="profile-info">
+            <span className="profile-name">
+              {currentUser?.name || "Guest"}
+            </span>
+            <span className="profile-role">
+              {currentUser?.role || ""}
+            </span>
+          </div>
         </div>
       </div>
     </header>

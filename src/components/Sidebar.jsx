@@ -6,21 +6,40 @@ import {
   Users,
   BarChart3,
   Settings,
-ShieldCheck,
+  ShieldCheck,
 } from "lucide-react";
 
 const menuItems = [
-  { name: "Dashboard", icon: <LayoutDashboard size={20} /> },
-  { name: "POS", icon: <ShoppingCart size={20} /> },
-  { name: "Products", icon: <Package size={20} /> },
-  { name: "Inventory", icon: <Boxes size={20} /> },
-  { name: "Customers", icon: <Users size={20} /> },
-  { name: "Reports", icon: <BarChart3 size={20} /> },
-  { name: "Settings", icon: <Settings size={20} /> },
+  { name: "Dashboard", icon: <LayoutDashboard size={20} />, roles: ["Admin", "Cashier"] },
+  { name: "POS", icon: <ShoppingCart size={20} />, roles: ["Admin", "Cashier"] },
+  { name: "Products", icon: <Package size={20} />, roles: ["Admin", "Cashier"] },
+  { name: "Inventory", icon: <Boxes size={20} />, roles: ["Admin"] },
+  { name: "Customers", icon: <Users size={20} />, roles: ["Admin", "Cashier"] },
+  { name: "Reports", icon: <BarChart3 size={20} />, roles: ["Admin"] },
   { name: "Users", icon: <ShieldCheck size={20} />, roles: ["Admin"] },
+  { name: "Settings", icon: <Settings size={20} />, roles: ["Admin"] },
 ];
 
-function Sidebar({ activePage, setActivePage, sidebarOpen, storeName }) {
+function Sidebar({
+  activePage,
+  setActivePage,
+  sidebarOpen,
+  storeName,
+  currentUser,
+}) {
+  const role = currentUser?.role || "Cashier";
+  const visibleItems = menuItems.filter((item) => item.roles.includes(role));
+
+  const getInitials = (name) => {
+    if (!name) return "?";
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .slice(0, 2)
+      .join("")
+      .toUpperCase();
+  };
+
   return (
     <aside className={`sidebar ${sidebarOpen ? "open" : "closed"}`}>
       <div className="logo">
@@ -29,7 +48,7 @@ function Sidebar({ activePage, setActivePage, sidebarOpen, storeName }) {
       </div>
 
       <nav>
-        {menuItems.map((item) => (
+        {visibleItems.map((item) => (
           <button
             key={item.name}
             className={`nav-item ${activePage === item.name ? "active" : ""}`}
@@ -43,10 +62,12 @@ function Sidebar({ activePage, setActivePage, sidebarOpen, storeName }) {
 
       {sidebarOpen && (
         <div className="sidebar-footer">
-          <div className="user-avatar">A</div>
+          <div className="user-avatar">
+            {currentUser ? getInitials(currentUser.name) : "?"}
+          </div>
           <div>
-            <strong>Admin User</strong>
-            <small>Administrator</small>
+            <strong>{currentUser?.name || "Guest"}</strong>
+            <small>{currentUser?.role || ""}</small>
           </div>
         </div>
       )}
