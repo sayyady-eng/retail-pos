@@ -93,13 +93,6 @@ if (!currentUser) {
     currentUser={currentUser}
   />
 )}
-{activePage === "Users" && (
-  <UsersPage
-    users={users}
-    setUsers={setUsers}
-    currentUser={currentUser}
-  />
-)}
 
 {activePage === "Products" && (
           <ProductsPage products={products} setProducts={setProducts} />
@@ -119,7 +112,7 @@ if (!currentUser) {
         {activePage === "Settings" && (
           <SettingsPage settings={settings} setSettings={setSettings} />
         )}
-        {!["Dashboard", "POS", "Products", "Inventory", "Customers", "Reports", "Settings"].includes(activePage) && (
+        {!["Dashboard", "POS", "Products", "Inventory", "Customers", "Reports", "Users", "Settings"].includes(activePage) && (
           <PlaceholderPage pageName={activePage} />
         )}
       </main>

@@ -51,6 +51,8 @@ input {
   padding: 25px 18px;
   z-index: 1000;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .logo {
@@ -70,6 +72,7 @@ input {
   display: flex;
   flex-direction: column;
   gap: 7px;
+  flex: 1;               /* <--- ADD THIS */
 }
 
 .sidebar nav button {
@@ -98,14 +101,14 @@ input {
 }
 
 .sidebar-footer {
-  position: absolute;
-  left: 18px;
-  right: 18px;
-  bottom: 25px;
+  margin-top: auto;      /* <--- Pushes it to the very bottom */
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   align-items: center;
   gap: 12px;
 }
+
 
 .user-avatar {
   width: 42px;
