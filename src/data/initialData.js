@@ -27,3 +27,29 @@ export const initialSettings = {
 
 export const initialStockHistory = [];
 export const initialReceiptCounter = 1000;
+export const initialUsers = [
+  {
+    id: 1,
+    username: "admin",
+    email: "admin@retailpos.com",
+    password: "admin123",
+    name: "Admin User",
+    role: "Admin",
+  },
+  {
+    id: 2,
+    username: "maria",
+    email: "maria@retailpos.com",
+    password: "cash123",
+    name: "Maria Santos",
+    role: "Cashier",
+  },
+  {
+    id: 3,
+    username: "john",
+    email: "john@retailpos.com",
+    password: "cash456",
+    name: "John Cruz",
+    role: "Cashier",
+  },
+];

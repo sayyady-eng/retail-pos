@@ -11,6 +11,7 @@ import ReportsPage from "./pages/ReportsPage";
 import SettingsPage from "./pages/SettingsPage";
 import useLocalStorage from "./hooks/useLocalStorage";
 import Login from "./components/Login";
+import UsersPage from "./pages/UsersPage";
 import {
   initialProducts,
   initialCustomers,
@@ -18,12 +19,12 @@ import {
   initialSettings,
   initialStockHistory,
   initialReceiptCounter,
+  initialUsers,
 } from "./data/initialData";
-
 function App() {
   // Auth state
-  const [isLoggedIn, setIsLoggedIn] = useLocalStorage("pos_isLoggedIn", false);
-
+  const [currentUser, setCurrentUser] = useLocalStorage("pos_currentUser", null);
+const [users, setUsers] = useLocalStorage("pos_users", initialUsers);
   // UI state
   const [activePage, setActivePage] = useState("POS");
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -37,44 +38,70 @@ function App() {
   const [receiptCounter, setReceiptCounter] = useLocalStorage("pos_receiptCounter", initialReceiptCounter);
 
   // Show login if not authenticated
-  if (!isLoggedIn) {
-    return <Login onLogin={() => setIsLoggedIn(true)} />;
-  }
-
+if (!currentUser) {
+  return (
+    <Login
+      users={users}
+      onLogin={(user) => {
+        const { password, ...userSafe } = user;
+        setCurrentUser(userSafe);
+        setActivePage("POS");
+      }}
+    />
+  );
+}
   return (
     <div className="app">
-      <Sidebar
-        activePage={activePage}
-        setActivePage={setActivePage}
-        sidebarOpen={sidebarOpen}
-        storeName={settings.storeName}
-      />
+     <Sidebar
+  activePage={activePage}
+  setActivePage={setActivePage}
+  sidebarOpen={sidebarOpen}
+  storeName={settings.storeName}
+  currentUser={currentUser}
+/>
 
       <main className="main-content">
         <Header
-          activePage={activePage}
-          sidebarOpen={sidebarOpen}
-          setSidebarOpen={setSidebarOpen}
-          onLogout={() => setIsLoggedIn(false)}
-        />
+  activePage={activePage}
+  sidebarOpen={sidebarOpen}
+  setSidebarOpen={setSidebarOpen}
+  onLogout={() => setCurrentUser(null)}
+  currentUser={currentUser}
+/>
 
         {activePage === "Dashboard" && (
           <DashboardPage sales={sales} products={products} customers={customers} />
         )}
-        {activePage === "POS" && (
-          <POSPage
-            products={products}
-            setProducts={setProducts}
-            customers={customers}
-            sales={sales}
-            setSales={setSales}
-            receiptCounter={receiptCounter}
-            setReceiptCounter={setReceiptCounter}
-            setCustomers={setCustomers}
-            settings={settings}
-          />
-        )}
-        {activePage === "Products" && (
+       {activePage === "POS" && (
+  <POSPage
+    products={products}
+    setProducts={setProducts}
+    customers={customers}
+    sales={sales}
+    setSales={setSales}
+    receiptCounter={receiptCounter}
+    setReceiptCounter={setReceiptCounter}
+    setCustomers={setCustomers}
+    settings={settings}
+  />
+)}
+
+{activePage === "Users" && (
+  <UsersPage
+    users={users}
+    setUsers={setUsers}
+    currentUser={currentUser}
+  />
+)}
+{activePage === "Users" && (
+  <UsersPage
+    users={users}
+    setUsers={setUsers}
+    currentUser={currentUser}
+  />
+)}
+
+{activePage === "Products" && (
           <ProductsPage products={products} setProducts={setProducts} />
         )}
         {activePage === "Inventory" && (

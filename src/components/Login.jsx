@@ -1,23 +1,30 @@
 import { useState } from "react";
 import { ShoppingCart, Eye, EyeOff, Lock, User } from "lucide-react";
 
-function Login({ onLogin }) {
+function Login({ onLogin, users }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
-  const handleLogin = (e) => {
-    e.preventDefault();
+ const handleLogin = (e) => {
+  e.preventDefault();
 
-    // Temporary login for testing
-    if (username === "admin" && password === "admin123") {
-      setError("");
-      onLogin();
-    } else {
-      setError("Invalid username or password");
-    }
-  };
+  const input = username.trim().toLowerCase();
+
+  const foundUser = users.find((u) => {
+    const matchesUsername = u.username.toLowerCase() === input;
+    const matchesEmail = u.email && u.email.toLowerCase() === input;
+    return (matchesUsername || matchesEmail) && u.password === password;
+  });
+
+  if (foundUser) {
+    setError("");
+    onLogin(foundUser);
+  } else {
+    setError("Invalid username/email or password");
+  }
+};
 
   return (
     <div className="login-page">
@@ -35,14 +42,13 @@ function Login({ onLogin }) {
         <form onSubmit={handleLogin}>
 
           <div className="login-field">
-            <label>Username</label>
-
+          <label>Username or Email</label>
             <div className="input-wrapper">
               <User size={20} />
 
               <input
                 type="text"
-                placeholder="Enter username"
+                placeholder="Enter username or email"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required

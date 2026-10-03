@@ -6,6 +6,7 @@ import {
   Users,
   BarChart3,
   Settings,
+ShieldCheck,
 } from "lucide-react";
 
 const menuItems = [
@@ -16,6 +17,7 @@ const menuItems = [
   { name: "Customers", icon: <Users size={20} /> },
   { name: "Reports", icon: <BarChart3 size={20} /> },
   { name: "Settings", icon: <Settings size={20} /> },
+  { name: "Users", icon: <ShieldCheck size={20} />, roles: ["Admin"] },
 ];
 
 function Sidebar({ activePage, setActivePage, sidebarOpen, storeName }) {
