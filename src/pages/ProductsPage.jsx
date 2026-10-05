@@ -72,18 +72,19 @@ return;
       icon: form.icon || "📦",
     };
 
-    if (editingId !== null) {
-      setProducts((prev) =>
-        prev.map((p) => (p.id === editingId ? { ...p, ...productData } : p))
-      );
-    } else {
-      const newId = products.length ? Math.max(...products.map((p) => p.id)) + 1 : 1;
-      setProducts((prev) => [...prev, { id: newId, ...productData }]);
-    }
+      if (editingId !== null) {
+  setProducts((prev) =>
+    prev.map((p) => (p.id === editingId ? { ...p, ...productData } : p))
+  );
+  showToast(`${productData.name} updated.`, "success");
+} else {
+  const newId = products.length ? Math.max(...products.map((p) => p.id)) + 1 : 1;
+  setProducts((prev) => [...prev, { id: newId, ...productData }]);
+  showToast(`${productData.name} added.`, "success");
+}
 
     closeModal();
   };
-
   const handleDelete = (id) => {
     const product = products.find((p) => p.id === id);
     if (!product) return;
