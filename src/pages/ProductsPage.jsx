@@ -85,14 +85,14 @@ return;
 
     closeModal();
   };
-  const handleDelete = (id) => {
-    const product = products.find((p) => p.id === id);
-    if (!product) return;
-    if (window.confirm(`Delete "${product.name}"? This cannot be undone.`)) {
-      setProducts((prev) => prev.filter((p) => p.id !== id));
-    }
-  };
-
+const handleDelete = (id) => {
+  const product = products.find((p) => p.id === id);
+  if (!product) return;
+  if (window.confirm(`Delete "${product.name}"? This cannot be undone.`)) {
+    setProducts((prev) => prev.filter((p) => p.id !== id));
+    showToast(`${product.name} deleted.`, "success");   // ← Is this line there?
+  }
+};
   return (
     <div className="products-page">
       <div className="page-toolbar">
