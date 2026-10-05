@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
+import { useToast } from "../context/ToastContext";
 import { Save, Store, DollarSign, Percent, AlertTriangle, FileText, Check } from "lucide-react";
 
 function SettingsPage({ settings, setSettings }) {
-  const [form, setForm] = useState(settings);
+ const showToast = useToast();
+ const [form, setForm] = useState(settings);
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
@@ -26,10 +28,11 @@ function SettingsPage({ settings, setSettings }) {
       receiptFooter: form.receiptFooter.trim() || "Thank you for your purchase!",
     };
 
-    setSettings(cleanSettings);
-    setSaved(true);
+   setSettings(cleanSettings);
+setSaved(true);
+showToast("Settings saved successfully.", "success");
 
-    setTimeout(() => setSaved(false), 2500);
+setTimeout(() => setSaved(false), 2500);
   };
 
   const handleReset = () => {
@@ -41,11 +44,11 @@ function SettingsPage({ settings, setSettings }) {
         lowStockThreshold: 10,
         receiptFooter: "Thank you for your purchase!",
       };
-      setSettings(defaults);
-      setForm(defaults);
-    }
-  };
-
+         setSettings(defaults);
+    setForm(defaults);
+    showToast("Settings reset to defaults.", "info");
+  }
+};
   return (
     <div className="settings-page">
       <form onSubmit={handleSubmit} className="settings-form">

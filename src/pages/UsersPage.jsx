@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useToast } from "../context/ToastContext";
 import { Plus, Edit, Trash2, Search, X, User, Mail, Lock, Shield } from "lucide-react";
 
 const emptyForm = {
@@ -10,7 +11,8 @@ const emptyForm = {
 };
 
 function UsersPage({ users, setUsers, currentUser }) {
-  const [search, setSearch] = useState("");
+ const showToast = useToast();
+ const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState(emptyForm);
@@ -57,7 +59,7 @@ function UsersPage({ users, setUsers, currentUser }) {
     e.preventDefault();
 
     if (!form.username.trim() || !form.password.trim() || !form.name.trim()) {
-      alert("Please fill in username, password, and name.");
+      showToast("Please fill in name, username, and password.", "error");
       return;
     }
 
@@ -68,7 +70,7 @@ function UsersPage({ users, setUsers, currentUser }) {
         u.id !== editingId
     );
     if (duplicate) {
-      alert("That username already exists.");
+      showToast("That username already exists.", "error");
       return;
     }
 
@@ -80,16 +82,18 @@ function UsersPage({ users, setUsers, currentUser }) {
       role: form.role,
     };
 
-    if (editingId !== null) {
-      setUsers((prev) =>
-        prev.map((u) => (u.id === editingId ? { ...u, ...userData } : u))
-      );
-    } else {
-      const newId = users.length ? Math.max(...users.map((u) => u.id)) + 1 : 1;
-      setUsers((prev) => [...prev, { id: newId, ...userData }]);
-    }
+   if (editingId !== null) {
+  setUsers((prev) =>
+    prev.map((u) => (u.id === editingId ? { ...u, ...userData } : u))
+  );
+  showToast(`${userData.name} updated.`, "success");
+} else {
+  const newId = users.length ? Math.max(...users.map((u) => u.id)) + 1 : 1;
+  setUsers((prev) => [...prev, { id: newId, ...userData }]);
+  showToast(`${userData.name} added.`, "success");
+}
 
-    closeModal();
+closeModal();
   };
 
   const handleDelete = (id) => {
@@ -97,20 +101,21 @@ function UsersPage({ users, setUsers, currentUser }) {
     if (!user) return;
 
     if (id === currentUser?.id) {
-      alert("You cannot delete your own account.");
+      showToast("You cannot delete your own account.", "error");
       return;
     }
 
     // Prevent deleting the last admin
     const admins = users.filter((u) => u.role === "Admin");
     if (user.role === "Admin" && admins.length <= 1) {
-      alert("Cannot delete the only Admin account.");
+      showToast("Cannot delete the only Admin account.", "error");
       return;
     }
 
-    if (window.confirm(`Delete "${user.name}"? This cannot be undone.`)) {
-      setUsers((prev) => prev.filter((u) => u.id !== id));
-    }
+   if (window.confirm(`Delete "${user.name}"? This cannot be undone.`)) {
+  setUsers((prev) => prev.filter((u) => u.id !== id));
+  showToast(`${user.name} deleted.`, "success");
+}
   };
 
   const getInitials = (name) => {

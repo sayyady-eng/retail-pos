@@ -1,3 +1,4 @@
+import { useToast } from "../context/ToastContext";
 import { useState, useRef } from "react";
 import {
   Search,
@@ -30,12 +31,12 @@ function POSPage({
   const [selectedCustomerId, setSelectedCustomerId] = useState(1);
   const [lastSale, setLastSale] = useState(null);
   const receiptRef = useRef(null);
-
+  const showToast = useToast();
   const selectedCustomer = customers.find((c) => c.id === selectedCustomerId);
 
   const addToCart = (product) => {
     if (product.stock <= 0) {
-      alert(`${product.name} is out of stock.`);
+      showToast(`${product.name} is out of stock.`, "error");
       return;
     }
 
@@ -44,7 +45,7 @@ function POSPage({
 
       if (existing) {
         if (existing.quantity >= product.stock) {
-          alert(`Only ${product.stock} units of ${product.name} available.`);
+          showToast(`Only ${product.stock} units available.`, "error");
           return currentCart;
         }
         return currentCart.map((item) =>
@@ -66,7 +67,7 @@ function POSPage({
           const newQty = item.quantity + change;
           const product = products.find((p) => p.id === id);
           if (newQty > product.stock) {
-            alert(`Only ${product.stock} units available.`);
+            showToast(`Only ${product.stock} units available.`, "error");
             return item;
           }
           return { ...item, quantity: newQty };
@@ -90,7 +91,7 @@ function POSPage({
 
   const checkout = () => {
     if (cart.length === 0) {
-      alert("Please add products to the cart.");
+      showToast("Please add products to the cart.", "error");
       return;
     }
 

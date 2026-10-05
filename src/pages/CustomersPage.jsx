@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useToast } from "../context/ToastContext";
 import { Plus, Edit, Trash2, Search, X, User, Phone, Mail, ShoppingBag } from "lucide-react";
 
 const emptyForm = {
@@ -8,7 +9,8 @@ const emptyForm = {
 };
 
 function CustomersPage({ customers, setCustomers }) {
-  const [search, setSearch] = useState("");
+ const showToast = useToast();
+ const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState(emptyForm);
@@ -53,7 +55,7 @@ function CustomersPage({ customers, setCustomers }) {
     e.preventDefault();
 
     if (!form.name.trim()) {
-      alert("Please enter the customer's name.");
+      showToast("Please enter the customer's name.", "error");
       return;
     }
 
@@ -85,13 +87,14 @@ function CustomersPage({ customers, setCustomers }) {
     if (!customer) return;
 
     if (customer.name === "Walk-in Customer") {
-      alert("The Walk-in Customer cannot be deleted.");
+      showToast("The Walk-in Customer cannot be deleted.", "error");
       return;
     }
 
-    if (window.confirm(`Delete "${customer.name}"? This cannot be undone.`)) {
-      setCustomers((prev) => prev.filter((c) => c.id !== id));
-    }
+   if (window.confirm(`Delete "${customer.name}"? This cannot be undone.`)) {
+  setCustomers((prev) => prev.filter((c) => c.id !== id));
+  showToast(`${customer.name} deleted.`, "success");
+}
   };
 
   const getInitials = (name) => {

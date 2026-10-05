@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useToast } from "../context/ToastContext";
 import { Plus, Edit, Trash2, Search, X } from "lucide-react";
 
 const emptyForm = {
@@ -10,6 +11,7 @@ const emptyForm = {
 };
 
 function ProductsPage({ products, setProducts }) {
+const showToast = useToast(); 
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [showModal, setShowModal] = useState(false);
@@ -57,7 +59,8 @@ function ProductsPage({ products, setProducts }) {
     e.preventDefault();
 
     if (!form.name || form.price === "" || form.stock === "") {
-      alert("Please fill in name, price, and stock.");
+      showToast("Please fill in name, price, and stock.", "error");
+return;
       return;
     }
 
