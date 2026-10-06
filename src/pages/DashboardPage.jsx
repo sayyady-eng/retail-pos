@@ -125,6 +125,7 @@ function DashboardPage({ sales, products, customers }) {
                   <th>Receipt</th>
                   <th>Customer</th>
                   <th>Payment</th>
+                  <th>Cashier</th>
                   <th>Items</th>
                   <th>Total</th>
                   <th>Date</th>
@@ -139,10 +140,11 @@ function DashboardPage({ sales, products, customers }) {
                     <td>{sale.customerName}</td>
                     <td>
                       <span className="payment-badge">
-                        {paymentIcon(sale.paymentMethod)}
+                      {paymentIcon(sale.paymentMethod)}
                         {sale.paymentMethod}
                       </span>
                     </td>
+                    <td>{sale.soldBy || "—"}</td>  
                     <td>
                       {sale.items.reduce((sum, i) => sum + i.quantity, 0)}
                     </td>

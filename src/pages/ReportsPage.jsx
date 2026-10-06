@@ -248,6 +248,7 @@ function ReportsPage({ sales }) {
                   <th>Date</th>
                   <th>Customer</th>
                   <th>Payment</th>
+                  <th>Cashier</th>
                   <th>Items</th>
                   <th>Total</th>
                 </tr>
@@ -266,6 +267,7 @@ function ReportsPage({ sales }) {
                         {sale.paymentMethod}
                       </span>
                     </td>
+                    <td>{sale.soldBy || "—"}</td> 
                     <td>{sale.items.reduce((sum, i) => sum + i.quantity, 0)}</td>
                     <td>
                       <strong>₱{sale.total.toFixed(2)}</strong>

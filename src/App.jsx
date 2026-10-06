@@ -83,7 +83,8 @@ if (!currentUser) {
     setReceiptCounter={setReceiptCounter}
     setCustomers={setCustomers}
     settings={settings}
-  />
+    currentUser={currentUser}
+/>
 )}
 
 {activePage === "Users" && (

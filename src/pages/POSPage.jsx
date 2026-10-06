@@ -24,6 +24,7 @@ function POSPage({
   setReceiptCounter,
   setCustomers,
   settings,
+  currentUser,
 }) {
   const [cart, setCart] = useState([]);
   const [search, setSearch] = useState("");
@@ -114,6 +115,8 @@ function POSPage({
       paymentMethod,
       customerId: selectedCustomerId,
       customerName: selectedCustomer?.name || "Walk-in Customer",
+      soldBy: currentUser?.name || "Unknown",
+      soldByRole: currentUser?.role || "",  
     };
 
     setSales([newSale, ...sales]);
@@ -327,27 +330,23 @@ function POSPage({
               </div>
 
               <div className="receipt-meta">
-                <div>
-                  <span>Date:</span>
-                  <strong>
-                    {new Date(lastSale.timestamp).toLocaleString("en-PH", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </strong>
-                </div>
-                <div>
-                  <span>Customer:</span>
-                  <strong>{lastSale.customerName}</strong>
-                </div>
-                <div>
-                  <span>Payment:</span>
-                  <strong>{lastSale.paymentMethod}</strong>
-                </div>
-              </div>
+  <div>
+    <span>Date:</span>
+    <strong>...</strong>
+  </div>
+  <div>
+    <span>Customer:</span>
+    <strong>{lastSale.customerName}</strong>
+  </div>
+  <div>
+    <span>Payment:</span>
+    <strong>{lastSale.paymentMethod}</strong>
+  </div>
+  <div>
+    <span>Sold by:</span>
+    <strong>{lastSale.soldBy || "Unknown"}</strong>
+  </div>
+</div>
 
               <div className="receipt-divider"></div>
 
@@ -391,7 +390,7 @@ function POSPage({
               </div>
             </div>
 
-            <div className="receipt-buttons">
+              <div className="receipt-buttons">
               <button className="secondary-btn" onClick={closeReceipt}>
                 Close
               </button>
